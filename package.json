@@ -1,0 +1,17 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "serve": "node_modules/http-server/bin/http-server"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "http-server": "^0.9.0",
+    "requirejs": "^2.3.3",
+    "todomvc-app-css": "^1.0.0",
+    "todomvc-common": "^1.0.1"
+  }
+}
