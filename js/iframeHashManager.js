@@ -118,6 +118,7 @@
     }
 
     function attachListener (iframe, index) {
+      console.log(iframe)
       iframe.addEventListener('load', function () {
         attachListenerToiframe(index, 'hashchange', handleSlaveHashChangeFor(iframe))
       })
@@ -130,7 +131,8 @@
       map(createSingleSlaveSkeleton),
       join(''),
       wrap,
-      writeToLocation
+      log('Initial location')
+      // writeToLocation
     ])()
 
     function createSingleSlaveSkeleton (iframe) {
