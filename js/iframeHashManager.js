@@ -94,7 +94,7 @@
     ])(parts[1])
 
     return urlHead
-         + startDelimiter + newSlaveHash + endDelimiter // new encodede slave hash
+         + startDelimiter + (newSlaveHash || "") + endDelimiter // new encodede slave hash
          + urlTail
   }
 
@@ -121,6 +121,11 @@
     writeToLocation(injectIntoMaster(appId, hash, window.location.hash))
   }
 
+  // getIframes :: Void -> Array iframe
+  function getIframes () {
+    return Array.from(document.getElementsByTagName('iframe'))
+  }
+
 
 
 
@@ -133,12 +138,6 @@
   // 1. wait for all the iframes to load
   // 2. re-attach the event listeners for hash change onto the iframe
   function INTEGRATE () {
-
-
-    // getIframes :: Void -> Array iframe
-    function getIframes () {
-      return Array.from(document.getElementsByTagName('iframe'))
-    }
 
     // bindRouting :: iframe -> Int -> Effect iframe
     function bindRouting (iframe, index) {
@@ -195,6 +194,6 @@
 
   }
 
-  INTEGRATE()
+  if (getIframes().length > 1) INTEGRATE()
 
 })(this)
