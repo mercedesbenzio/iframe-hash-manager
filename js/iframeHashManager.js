@@ -13,7 +13,7 @@
   const map = fn => arr => arr.map(fn)
 
   // map :: (a -> b -> c) -> Array a -> Array b -> Array c
-  const map2 = fn => arr1 => arr2 => arr.map((el, index) => fn(el, arr2[index]))
+  const map2 = fn => arr1 => arr2 => arr1.map((el, index) => fn(el, arr2[index], index))
 
   // join :: Array String -> String
   const join = delimiter => arr => arr.join(delimiter)
@@ -165,7 +165,7 @@
     ])
 
     // extractHashesFor :: Array iframes -> String -> Array String
-    const extractHashesFor = iframes => masterHash => {
+    const extractHashesFor = masterHash => iframes => {
       var ids = map(iframe => iframe.id)(iframes)
       return map(id => extractFromMaster(id, masterHash))(ids)
     }
@@ -178,12 +178,20 @@
       return `_${iframe.id}._,`
     }
 
-    console.log(window.location.hash)
+    // injectAfterLoad :: Array String -> Array iframes -> Effect Array iframes
+    const injectAfterLoad = (hash, iframe, index) => {
+      iframe.addEventListener('load', function () {
+        log('setting hash')(iframe, hash)
+        getIframes()[index].contentWindow.location.hash = hash
+      })
+    }
+
     if (window.location.hash === "") {
       setDefaultHashFrom(iframes)
     } else {
-      const restoredHashes = extractHashesFor(iframes)(location.hash)
+      const restoredHashes = extractHashesFor(location.hash)(iframes)
       console.log(restoredHashes)
+      map2(injectAfterLoad)(restoredHashes)(iframes)
     }
     map(bindRouting)(iframes)
 
