@@ -1,4 +1,33 @@
+
+// URL format
 (function iframeHashManager (window) {
+
+  // FP Primitive helpers
+  // compose :: List (a -> b) -> (a -> b)
+  const compose = functions => initial => functions.reverse().reduceRight(
+      (result, fn) => fn(result),
+      initial
+  );
+
+  // map :: (a -> b) -> Array a -> Array b
+  const map = fn => arr => arr.map(fn)
+
+  // join :: Array String -> String
+  const join = delimiter => arr => arr.join(delimiter)
+
+  // log :: a -> a
+  const log = tag => data => {console.log(tag, data); return data}
+
+  // tail :: Array a -> Array (Maybe a)
+  const tail = arr => arr.slice(1, arr.length)
+
+
+  // split :: String -> Array String
+  const split = delim => str => str.split(delim)
+
+  // get :: String -> Object a -> a
+  const get = path => object => object[path]
+
   function TEST () {
 
     testMasterHash = "#_td.schedule?tdbLng=en&tdbCC=GB&tdbMCID=s-class&tdbMBTID=coupe&tdbTransmission=AUTOMATIC&tdbFuelType=PETROL&dealerOutletId=GS0001780_,"
@@ -13,6 +42,7 @@
     assert(extractFromMaster("notfoundyet", testMasterHash) === undefined, 'extraction')
 
     // injection
+    console.log(injectIntoMaster("td", "SUCCESS", testMasterHash))
     assert(injectIntoMaster("td", "SUCCESS", testMasterHash) === '#_td.SUCCESS_,_dcp.aroisetn#$%@#$@#$dcp_,_ovs.aeitson^!@#$@#RSTDRorntoaersteo_++)()*))_,', 'injection')
 
     // initial link creation
@@ -38,26 +68,11 @@
   // TEST()
 
 
-  const compose = functions => initial => functions.reverse().reduceRight(
-      (result, fn) => fn(result),
-      initial
-  );
-
-  // map :: (a -> b) -> Array a -> Array b
-  const map = fn => arr => arr.map(fn)
-
-  // join :: Array String -> String
-  const join = delimiter => arr => arr.join(delimiter)
-
-  // log :: a -> a
-  const log = tag => data => {console.log(tag, data); return data}
-
-
 
   // extractFromMaster :: String -> String -> String
   function extractFromMaster( slaveHashId, masterHash ) {
     // delimiters are hard-coded: _[id]. and _,
-    const slaveHashPattern = new RegExp( "_" + slaveHashId + "\.(.*?)_," )
+    const slaveHashPattern = new RegExp( `_${slaveHashId}\.(.*?)_,` )
     const matches = slaveHashPattern.exec(masterHash)
     // fallback pattern to handle empty matches
     return (matches || [])[1] // get first capturing group
@@ -66,11 +81,20 @@
 
   // injectIntoMaster :: String -> String -> String
   function injectIntoMaster(slaveHashId, newSlaveHash, masterHash) {
-    const oldSlaveHash = extractFromMaster(slaveHashId, masterHash)
-    if (oldSlaveHash) {
-      return masterHash.replace(oldSlaveHash, newSlaveHash)
-    }
-    return masterHash + "_" + slaveHashId + "." + newSlaveHash + "_,"
+    console.log(arguments)
+    const startDelimiter = `_${slaveHashId}.`
+    const endDelimiter = '_,'
+
+    const parts = masterHash.split(startDelimiter)
+    const start = parts[0]
+    const end = compose([
+      get(1),
+      split(endDelimiter),
+      tail,
+      join(endDelimiter)
+    ])(parts)
+
+    return start + startDelimiter + newSlaveHash + endDelimiter + end
   }
 
 
@@ -131,8 +155,8 @@
       map(createSingleSlaveSkeleton),
       join(''),
       wrap,
-      log('Initial location')
-      // writeToLocation
+      log('Initial location'),
+      writeToLocation
     ])()
 
     function createSingleSlaveSkeleton (iframe) {
