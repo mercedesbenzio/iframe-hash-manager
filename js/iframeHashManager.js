@@ -12,6 +12,9 @@
   // map :: (a -> b) -> Array a -> Array b
   const map = fn => arr => arr.map(fn)
 
+  // map :: (a -> b -> c) -> Array a -> Array b -> Array c
+  const map2 = fn => arr1 => arr2 => arr.map((el, index) => fn(el, arr2[index]))
+
   // join :: Array String -> String
   const join = delimiter => arr => arr.join(delimiter)
 
@@ -21,12 +24,8 @@
   // tail :: Array a -> Array (Maybe a)
   const tail = arr => arr.slice(1, arr.length)
 
-
   // split :: String -> Array String
   const split = delim => str => str.split(delim)
-
-  // get :: String -> Object a -> a
-  const get = path => object => object[path]
 
   function TEST () {
 
@@ -81,20 +80,22 @@
 
   // injectIntoMaster :: String -> String -> String
   function injectIntoMaster(slaveHashId, newSlaveHash, masterHash) {
-    console.log(arguments)
     const startDelimiter = `_${slaveHashId}.`
     const endDelimiter = '_,'
 
     const parts = masterHash.split(startDelimiter)
-    const start = parts[0]
-    const end = compose([
-      get(1),
+    const urlHead = parts[0]
+
+    // just remove the rest of the
+    const urlTail = compose([
       split(endDelimiter),
       tail,
       join(endDelimiter)
-    ])(parts)
+    ])(parts[1])
 
-    return start + startDelimiter + newSlaveHash + endDelimiter + end
+    return urlHead
+         + startDelimiter + newSlaveHash + endDelimiter // new encodede slave hash
+         + urlTail
   }
 
 
@@ -133,35 +134,58 @@
   // 2. re-attach the event listeners for hash change onto the iframe
   function INTEGRATE () {
 
-    function attachListenerToiframe (iframeIndex, eventId, handler) {
-      getIframes()[iframeIndex].contentWindow.addEventListener(eventId, handler)
-    }
 
+    // getIframes :: Void -> Array iframe
     function getIframes () {
       return Array.from(document.getElementsByTagName('iframe'))
     }
 
-    function attachListener (iframe, index) {
-      console.log(iframe)
+    // bindRouting :: iframe -> Int -> Effect iframe
+    function bindRouting (iframe, index) {
       iframe.addEventListener('load', function () {
         attachListenerToiframe(index, 'hashchange', handleSlaveHashChangeFor(iframe))
       })
       return iframe
     }
 
-    compose([
-      getIframes,
-      map(attachListener),
+    // attachListenerToiframe :: iframe -> Int -> Effect iframe
+    function attachListenerToiframe (iframeIndex, eventId, handler) {
+      getIframes()[iframeIndex].contentWindow.addEventListener(eventId, handler)
+    }
+
+    // iframes :: Array iframe
+    const iframes = getIframes()
+
+    // setDefaultHash :: Array iframe -> Effect window.location
+    const setDefaultHashFrom = compose([
       map(createSingleSlaveSkeleton),
       join(''),
       wrap,
-      log('Initial location'),
       writeToLocation
-    ])()
+    ])
 
+    // extractHashesFor :: Array iframes -> String -> Array String
+    const extractHashesFor = iframes => masterHash => {
+      var ids = map(iframe => iframe.id)(iframes)
+      return map(id => extractFromMaster(id, masterHash))(ids)
+    }
+
+    // setHashFor :: iframe -> String -> Effect iframe
+    const setHashFor = iframe => hash => { iframe.contentWindow.location.hash = hash; return iframe }
+
+    // createSingleSlaveSkeleton :: iframe -> String
     function createSingleSlaveSkeleton (iframe) {
       return `_${iframe.id}._,`
     }
+
+    console.log(window.location.hash)
+    if (window.location.hash === "") {
+      setDefaultHashFrom(iframes)
+    } else {
+      const restoredHashes = extractHashesFor(iframes)(location.hash)
+      console.log(restoredHashes)
+    }
+    map(bindRouting)(iframes)
 
   }
 
