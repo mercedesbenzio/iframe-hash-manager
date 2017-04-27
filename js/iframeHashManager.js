@@ -19,7 +19,7 @@
   const join = delimiter => arr => arr.join(delimiter)
 
   // log :: a -> a
-  const log = tag => data => {console.log(tag, data); return data}
+  const log = tag => data => {console.dir(tag, data); return data}
 
   // tail :: Array a -> Array (Maybe a)
   const tail = arr => arr.slice(1, arr.length)
@@ -41,7 +41,6 @@
     assert(extractFromMaster("notfoundyet", testMasterHash) === undefined, 'extraction')
 
     // injection
-    console.log(injectIntoMaster("td", "SUCCESS", testMasterHash))
     assert(injectIntoMaster("td", "SUCCESS", testMasterHash) === '#_td.SUCCESS_,_dcp.aroisetn#$%@#$@#$dcp_,_ovs.aeitson^!@#$@#RSTDRorntoaersteo_++)()*))_,', 'injection')
 
     // initial link creation
@@ -80,6 +79,7 @@
 
   // injectIntoMaster :: String -> String -> String
   function injectIntoMaster(slaveHashId, newSlaveHash, masterHash) {
+
     const startDelimiter = `_${slaveHashId}.`
     const endDelimiter = '_,'
 
@@ -115,9 +115,9 @@
 
   // handleSlaveHashChangeFor :: HTMLIFrameElement -> Event hashchange -> Effect window.location
   const handleSlaveHashChangeFor = iframe => ev => {
-    const updateUrl = compose([injectIntoMaster, writeToLocation])
     const hash = unwrapHash(ev.newURL)
     const appId = iframe.id
+
     writeToLocation(injectIntoMaster(appId, hash, window.location.hash))
   }
 
@@ -181,7 +181,6 @@
     // injectAfterLoad :: Array String -> Array iframes -> Effect Array iframes
     const injectAfterLoad = (hash, iframe, index) => {
       iframe.addEventListener('load', function () {
-        log('setting hash')(iframe, hash)
         getIframes()[index].contentWindow.location.hash = hash
       })
     }
@@ -190,7 +189,6 @@
       setDefaultHashFrom(iframes)
     } else {
       const restoredHashes = extractHashesFor(location.hash)(iframes)
-      console.log(restoredHashes)
       map2(injectAfterLoad)(restoredHashes)(iframes)
     }
     map(bindRouting)(iframes)
