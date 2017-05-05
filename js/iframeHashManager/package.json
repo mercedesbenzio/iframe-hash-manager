@@ -1,0 +1,16 @@
+{
+  "name": "iframe-hash-manager",
+  "version": "0.0.1",
+  "description": "Simple hash manager for the oneWeb multiple SPA iframe concept",
+  "main": "iframeHashManager.js",
+  "scripts": {
+    "test": "babel-node test.js"
+  },
+  "keywords": [],
+  "author": "Jan Wirth <jan.wirth@cinteo.com>",
+  "license": "ISC",
+  "dependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-latest": "^6.24.1"
+  }
+}
