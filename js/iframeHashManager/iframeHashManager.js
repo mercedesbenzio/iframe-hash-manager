@@ -1,5 +1,15 @@
-import {compose, map, map2, join, log, tail, split} from './fp'
-import {extractFromMaster, injectIntoMaster, wrap, unwrapHash}} from './logic.js'
+// iframeHashManager
+// This module can be transpiled to ES5 and included as-is without any additional initialization code
+// To manage the hashes in the Onweb multiple-spa iframe concept
+// It currently supports
+// - extracting the initial state of the apps from the URL and injecting it into the iframes
+//   if no hash was fonud in the master URL, an initial URL will be generated based on the iframes on the site
+// - keeping the hash of the master window up-to-date with the hashes of individual iframes
+// TODO
+// - mirroring the URL if a single iFrame is used.
+
+import F from './fp'
+import logic from './logic.js'
 
 
 // URL format
@@ -11,10 +21,10 @@ import {extractFromMaster, injectIntoMaster, wrap, unwrapHash}} from './logic.js
 
   // handleSlaveHashChangeFor :: HTMLIFrameElement -> Event hashchange -> Effect window.location
   const handleSlaveHashChangeFor = iframe => ev => {
-    const hash = unwrapHash(ev.newURL)
+    const hash = logic.unwrapHash(ev.newURL)
     const appId = iframe.id
 
-    writeToLocation(injectIntoMaster(appId, hash, window.location.hash))
+    writeToLocation(logic.injectIntoMaster(appId, hash, window.location.hash))
   }
 
   // getIframes :: Void -> Array iframe
@@ -45,17 +55,17 @@ import {extractFromMaster, injectIntoMaster, wrap, unwrapHash}} from './logic.js
     const iframes = getIframes()
 
     // setDefaultHash :: Array iframe -> Effect window.location
-    const setDefaultHashFrom = compose([
-      map(createSingleSlaveSkeleton),
-      join(''),
-      wrap,
-      writeToLocation
+    const setDefaultHashFrom = F.compose([
+      F.map(createSingleSlaveSkeleton),
+      F.join(''),
+      F.wrap,
+      F.writeToLocation
     ])
 
     // extractHashesFor :: Array iframes -> String -> Array String
     const extractHashesFor = masterHash => iframes => {
       var ids = map(iframe => iframe.id)(iframes)
-      return map(id => extractFromMaster(id, masterHash))(ids)
+      return map(id => logic.extractFromMaster(id, masterHash))(ids)
     }
 
     // setHashFor :: iframe -> String -> Effect iframe
@@ -77,9 +87,9 @@ import {extractFromMaster, injectIntoMaster, wrap, unwrapHash}} from './logic.js
       setDefaultHashFrom(iframes)
     } else {
       const restoredHashes = extractHashesFor(location.hash)(iframes)
-      map2(injectAfterLoad)(restoredHashes)(iframes)
+      F.map2(injectAfterLoad)(restoredHashes)(iframes)
     }
-    map(bindRouting)(iframes)
+    F.map(bindRouting)(iframes)
 
   }
 

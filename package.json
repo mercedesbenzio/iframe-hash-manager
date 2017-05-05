@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "npm run serve",
     "serve": "node_modules/http-server/bin/http-server"
   },
   "author": "",
