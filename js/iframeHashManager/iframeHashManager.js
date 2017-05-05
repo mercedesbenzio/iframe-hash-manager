@@ -29,7 +29,7 @@ import logic from './logic.js'
 
   // getIframes :: Void -> Array iframe
   function getIframes () {
-    return Array.from(document.getElementsByTagName('iframe'))
+    return Array.from(window.document.getElementsByTagName('iframe'))
   }
 
   // INTEGRATION
@@ -56,10 +56,12 @@ import logic from './logic.js'
 
     // setDefaultHash :: Array iframe -> Effect window.location
     const setDefaultHashFrom = F.compose([
+      F.log('iframes'),
       F.map(createSingleSlaveSkeleton),
+      F.log('skeleton'),
       F.join(''),
-      F.wrap,
-      F.writeToLocation
+      logic.wrap,
+      writeToLocation
     ])
 
     // extractHashesFor :: Array iframes -> String -> Array String
@@ -84,6 +86,7 @@ import logic from './logic.js'
     }
 
     if (window.location.hash === "") {
+      console.log(iframes)
       setDefaultHashFrom(iframes)
     } else {
       const restoredHashes = extractHashesFor(location.hash)(iframes)
@@ -95,4 +98,4 @@ import logic from './logic.js'
 
   if (getIframes().length > 1) INTEGRATE()
 
-})(this)
+})(window)

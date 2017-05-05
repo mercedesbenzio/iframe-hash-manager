@@ -1,9 +1,10 @@
 // FP Primitive helpers
 // compose :: List (a -> b) -> (a -> b)
-const compose = functions => initial => functions.reverse().reduceRight(
+const compose = functions => initial => {
+   console.log(functions); functions.reverse().reduceRight(
     (result, fn) => fn(result),
     initial
-);
+);}
 
 // map :: (a -> b) -> Array a -> Array b
 const map = fn => arr => arr.map(fn)

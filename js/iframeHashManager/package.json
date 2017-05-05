@@ -4,13 +4,16 @@
   "description": "Simple hash manager for the oneWeb multiple SPA iframe concept",
   "main": "iframeHashManager.js",
   "scripts": {
-    "test": "babel-node test.js"
+    "test": "babel-node logic.spec.js",
+    "build": "webpack"
   },
   "keywords": [],
   "author": "Jan Wirth <jan.wirth@cinteo.com>",
   "license": "ISC",
   "dependencies": {
     "babel-cli": "^6.24.1",
-    "babel-preset-latest": "^6.24.1"
+    "babel-loader": "^7.0.0",
+    "babel-preset-latest": "^6.24.1",
+    "webpack": "^2.5.0"
   }
 }
