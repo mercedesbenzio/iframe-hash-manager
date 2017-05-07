@@ -11,9 +11,16 @@
   "author": "Jan Wirth <jan.wirth@cinteo.com>",
   "license": "ISC",
   "dependencies": {
+    "ava": "^0.19.1",
     "babel-cli": "^6.24.1",
     "babel-loader": "^7.0.0",
     "babel-preset-latest": "^6.24.1",
     "webpack": "^2.5.0"
+  },
+  "ava": {
+    "require": [
+      "babel-register"
+    ],
+    "babel": "inherit"
   }
 }

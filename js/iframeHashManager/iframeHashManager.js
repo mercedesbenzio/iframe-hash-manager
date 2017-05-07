@@ -66,8 +66,8 @@ import logic from './logic.js'
 
     // extractHashesFor :: Array iframes -> String -> Array String
     const extractHashesFor = masterHash => iframes => {
-      var ids = map(iframe => iframe.id)(iframes)
-      return map(id => logic.extractFromMaster(id, masterHash))(ids)
+      var ids = F.map(iframe => iframe.id)(iframes)
+      return F.map(id => logic.extractFromMaster(id, masterHash))(ids)
     }
 
     // setHashFor :: iframe -> String -> Effect iframe

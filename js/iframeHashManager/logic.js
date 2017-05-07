@@ -24,8 +24,8 @@ function injectIntoMaster(slaveHashId, newSlaveHash, masterHash) {
   const parts = masterHash.split(startDelimiter)
   const urlHead = parts[0]
 
-  // just remove the rest of the
   const urlTail = F.compose([
+    F.log('tailo'),
     F.split(endDelimiter),
     F.tail,
     F.join(endDelimiter)
