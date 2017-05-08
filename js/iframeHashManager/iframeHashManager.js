@@ -1,19 +1,21 @@
 // iframeHashManager
 // This module can be transpiled to ES5 and included as-is without any additional initialization code
-// To manage the hashes in the Onweb multiple-spa iframe concept
+// to manage the hashes in the Onweb multiple-spa iframe concept.
 // It currently supports
 // - extracting the initial state of the apps from the URL and injecting it into the iframes
-//   if no hash was fonud in the master URL, an initial URL will be generated based on the iframes on the site
+//   if no hash was found in the master URL, an initial URL will be generated based on the iframes on the site
 // - keeping the hash of the master window up-to-date with the hashes of individual iframes
-// TODO
-// - mirroring the URL if a single iFrame is used.
+
+// Note on the bootstrap logic
+// Because the event listeners get detached on load, a special procedure is required
+// 1. wait for all the iframes to load
+// 2. re-attach the event listeners for hash change onto the iframe
 
 import F from './fp'
 import logic from './logic.js'
 
-
 // URL format
-(function iframeHashManager (window) {
+(function bootstrap (window) {
   // writeToLocation :: String -> Effect window.location
   function writeToLocation (hash) {
       history.pushState({}, document.title || "Mercedes Benz", hash);
@@ -32,11 +34,7 @@ import logic from './logic.js'
     return Array.from(window.document.getElementsByTagName('iframe'))
   }
 
-  // INTEGRATION
-  // Because the event listeners get detached on load, a special procedure is required
-  // 1. wait for all the iframes to load
-  // 2. re-attach the event listeners for hash change onto the iframe
-  function INTEGRATE () {
+  function bootstrap (iframeCount) {
 
     // bindRouting :: iframe -> Int -> Effect iframe
     function bindRouting (iframe, index) {
@@ -86,16 +84,12 @@ import logic from './logic.js'
     }
 
     if (window.location.hash === "") {
-      console.log(iframes)
       setDefaultHashFrom(iframes)
     } else {
       const restoredHashes = extractHashesFor(location.hash)(iframes)
       F.map2(injectAfterLoad)(restoredHashes)(iframes)
     }
     F.map(bindRouting)(iframes)
-
   }
-
-  if (getIframes().length > 1) INTEGRATE()
 
 })(window)

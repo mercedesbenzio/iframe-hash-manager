@@ -1,6 +1,6 @@
 // logic.js
-// This file contains all the logic functions that are testable
-// This means none of these pure functions have any side effect on window etc.
+// This file contains all the logic functions required for managing hashes
+// This means none of these pure functions have any side effect or depenency on window etc.
 
 import F from './fp'
 export default {extractFromMaster, injectIntoMaster, wrap, unwrapHash}
@@ -25,7 +25,6 @@ function injectIntoMaster(slaveHashId, newSlaveHash, masterHash) {
   const urlHead = parts[0]
 
   const urlTail = F.compose([
-    F.log('tailo'),
     F.split(endDelimiter),
     F.tail,
     F.join(endDelimiter)

@@ -2,12 +2,12 @@
   "name": "iframe-hash-manager",
   "version": "0.0.1",
   "description": "Simple hash manager for the oneWeb multiple SPA iframe concept",
-  "main": "iframeHashManager.js",
+  "main": "dist/iframeHashManager.js",
   "scripts": {
-    "test": "babel-node logic.spec.js",
+    "test": "ava logic.spec.js",
     "build": "webpack"
   },
-  "keywords": [],
+  "keywords": ["oneweb", "workbench", "routing", "spa"],
   "author": "Jan Wirth <jan.wirth@cinteo.com>",
   "license": "ISC",
   "dependencies": {
