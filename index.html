@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="css/start.css">
   </head>
   <body>
-    <iframe id="app"></iframe>
+    <iframe id="app" data-manage-hash="true" ></iframe>
     <template id="app-tpl">
       <!DOCTYPE html>
       <html>
@@ -65,7 +65,7 @@
         </body>
       </html>
     </template>
-    <iframe id="app2"></iframe>
+    <iframe id="app2" data-manage-hash="true" ></iframe>
     <template id="app2-tpl">
       <!DOCTYPE html>
       <html>
@@ -149,6 +149,6 @@
     <script src="js/iframeResizer.min.js"></script>
     <script src="js/start.js"></script>
     <script src="js/iframeHashManager/dist/iframeHashManager.js"></script>
-    <script>iframeHashManager.default(window, '.app-iframe')</script>
+    <script>iframeHashManager.default(window, '[data-manage-hash]')</script>
   </body>
 </html>

@@ -16,25 +16,40 @@ import logic from './logic.js'
 
 // URL format
 export default function bootstrap (window, selector) {
-  // writeToLocation :: String -> Effect window.location
-  function writeToLocation (hash) {
-      history.pushState({}, document.title || "Mercedes Benz", hash);
-  };
 
-  // handleSlaveHashChangeFor :: HTMLIFrameElement -> Event hashchange -> Effect window.location
-  const handleSlaveHashChangeFor = iframe => ev => {
-    const hash = logic.unwrapHash(ev.newURL)
-    const appId = iframe.id
+  function init (iframeCount) {
 
-    writeToLocation(logic.injectIntoMaster(appId, hash, window.location.hash))
-  }
+    // getElements :: String -> Array HTMLElement
+    const getElements  = window.document.querySelectorAll.bind(window.document)
 
-  // getIframes :: Void -> Array iframe
-  function getIframes () {
-    return Array.from(window.document.getElementsByTagName('iframe'))
-  }
+    // toArray :: NodeList HTMLElement -> Array HTMLElement
+    const toArray = Array.from.bind(Array)
 
-  function bootstrap (iframeCount) {
+    // getIframesBySelector :: String -> getIframes
+    // Returns a function that collects all iframes that also match the given selector.
+    // Note: Maybe this could be improved by combining the 'iframe' part to the given selector string.
+    // We could then omit F.filter from the source code (maybe)
+    const getIframesBySelector = (window, selector) => () => F.compose([
+      getElements,
+      toArray,
+      F.filter(x => x.tagName === "IFRAME")
+    ])(selector || 'iframe')
+
+    // getIframes :: Void -> Array iframe
+    const getIframes = getIframesBySelector(window, selector)
+
+    // handleSlaveHashChangeFor :: HTMLIFrameElement -> Event hashchange -> Effect window.location
+    const handleSlaveHashChangeFor = iframe => ev => {
+      const hash = logic.unwrapHash(ev.newURL)
+      const appId = iframe.id
+
+      writeToLocation(logic.injectIntoMaster(appId, hash, window.location.hash))
+    }
+
+    // writeToLocation :: String -> Effect window.location
+    function writeToLocation (hash) {
+        history.pushState({}, document.title || "Mercedes Benz", hash);
+    };
 
     // bindRouting :: iframe -> Int -> Effect iframe
     function bindRouting (iframe, index) {
@@ -54,9 +69,7 @@ export default function bootstrap (window, selector) {
 
     // setDefaultHash :: Array iframe -> Effect window.location
     const setDefaultHashFrom = F.compose([
-      F.log('iframes'),
       F.map(createSingleSlaveSkeleton),
-      F.log('skeleton'),
       F.join(''),
       logic.wrap,
       writeToLocation
@@ -91,7 +104,6 @@ export default function bootstrap (window, selector) {
     }
     F.map(bindRouting)(iframes)
   }
-
-  bootstrap(getIframes().length)
+  init()
 
 }
