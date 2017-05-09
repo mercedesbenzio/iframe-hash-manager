@@ -7,7 +7,10 @@ module.exports = function (options) {
     entry: './iframeHashManager',
     output: {
       filename: 'iframeHashManager.js',
-      path: path.resolve(__dirname, 'dist')
+      path: path.resolve(__dirname, 'dist'),
+      filename: "iframeHashManager.js",
+      library: "iframeHashManager",
+      libraryTarget: "umd"
     },
     module: {
       loaders: [

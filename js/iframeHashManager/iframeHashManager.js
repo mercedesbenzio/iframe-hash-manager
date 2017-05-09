@@ -15,7 +15,7 @@ import F from './fp'
 import logic from './logic.js'
 
 // URL format
-(function bootstrap (window) {
+export default function bootstrap (window, selector) {
   // writeToLocation :: String -> Effect window.location
   function writeToLocation (hash) {
       history.pushState({}, document.title || "Mercedes Benz", hash);
@@ -92,4 +92,6 @@ import logic from './logic.js'
     F.map(bindRouting)(iframes)
   }
 
-})(window)
+  bootstrap(getIframes().length)
+
+}
