@@ -8,3 +8,7 @@ Include `dist/iframeHashManager.js` in page to sync multiple iframe hashes with 
 ```
 
 <img src="https://hugelolcdn.com/hugegifs.com/i/687.gif">
+
+
+TODOS
+- add option to sync only one iframe

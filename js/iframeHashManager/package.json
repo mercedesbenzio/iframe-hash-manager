@@ -4,7 +4,8 @@
   "description": "Simple hash manager for the oneWeb multiple SPA iframe concept",
   "main": "dist/iframeHashManager.js",
   "scripts": {
-    "test": "ava logic.spec.js",
+    "test": "ava *.spec.js",
+    "watch-test": "ava *.spec.js --watch",
     "build": "webpack"
   },
   "keywords": ["oneweb", "workbench", "routing", "spa"],
