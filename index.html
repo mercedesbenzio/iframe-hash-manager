@@ -149,6 +149,11 @@
     <script src="js/iframeResizer.min.js"></script>
     <script src="js/start.js"></script>
     <script src="js/iframeHashManager/dist/iframeHashManager.js"></script>
-    <script>iframeHashManager.default(window, '[data-manage-hash]')</script>
+    <script>
+      iframeHashManager.default(window, {
+        selector: '[data-manage-hash]',
+        id: iframe => iframe.id.toUpperCase()
+      })
+    </script>
   </body>
 </html>

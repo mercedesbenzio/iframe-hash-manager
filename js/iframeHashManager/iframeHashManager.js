@@ -19,7 +19,11 @@ const getElements  = window.document.querySelectorAll.bind(window.document)
 const toArray = Array.from.bind(Array)
 
 // URL format
-export default function bootstrap (window, selector) {
+export default function bootstrap (window, options) {
+
+  // defaults
+  const selector = (options || {}).selector || 'iframe'
+  const id       = (options || {}).id       || (iframe => iframe.id)
 
 
 
@@ -32,7 +36,7 @@ export default function bootstrap (window, selector) {
     getElements,
     toArray,
     F.filter(x => x.tagName === "IFRAME")
-  ])(selector || 'iframe')
+  ])(selector)
 
   // getIframes :: Void -> Array iframe
   const getIframes = getIframesBySelector(window, selector)
@@ -85,7 +89,7 @@ export default function bootstrap (window, selector) {
   // handleSlaveHashChangeFor :: HTMLIFrameElement -> Event hashchange -> Effect window.location
   const handleSlaveHashChangeFor = iframe => ev => {
     const hash = logic.unwrapHash(ev.newURL)
-    const appId = iframe.id
+    const appId = id(iframe)
 
     writeToLocation(logic.injectIntoMaster(appId, hash, window.location.hash))
   }
@@ -93,7 +97,7 @@ export default function bootstrap (window, selector) {
 
   // extractHashesFor :: Array iframes -> String -> Array String
   const extractHashesFor = masterHash => iframes => {
-    var ids = F.map(iframe => iframe.id)(iframes)
+    var ids = F.map(id)(iframes)
     return F.map(id => logic.extractFromMaster(id, masterHash))(ids)
   }
 
@@ -102,7 +106,7 @@ export default function bootstrap (window, selector) {
 
   // createSingleSlaveSkeleton :: iframe -> String
   function createSingleSlaveSkeleton (iframe) {
-    return `_${iframe.id}._,`
+    return `_${id(iframe)}._,`
   }
 
   function init () {
