@@ -6,7 +6,8 @@
   "scripts": {
     "test": "ava *.spec.js",
     "watch-test": "ava *.spec.js --watch",
-    "build": "webpack"
+    "build": "webpack",
+    "prepublish": "npm run test && npm run build"
   },
   "keywords": ["oneweb", "workbench", "routing", "spa"],
   "author": "Jan Wirth <jan.wirth@cinteo.com>",
