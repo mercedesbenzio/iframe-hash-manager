@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Multiple SPA Tech Demo</title>
+    <link rel="stylesheet" href="css/start.css">
+  </head>
+  <body>
+    <iframe id="app" data-manage-hash="true" ></iframe>
+    <template id="app-tpl">
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta http-Equiv="Cache-Control" Content="no-cache">
+          <meta http-Equiv="Pragma" Content="no-cache">
+          <meta http-Equiv="Expires" Content="0">
+          <link rel="stylesheet" href="node_modules/todomvc-common/base.css">
+          <link rel="stylesheet" href="css/index.css">
+        </head>
+        <body>
+          <app class="todoapp" ng-controller="TodoController">
+            <header class="header">
+              <h1>todos</h1>
+              <form class="todo-form" ng-submit="addTodo()">
+                <input class="new-todo" placeholder="What needs to be done?" ng-model="newTodo" autofocus>
+              </form>
+            </header>
+            <section class="main" ng-show="todos.length" ng-cloak>
+              <input class="toggle-all" type="checkbox" ng-model="allChecked" ng-click="markAll(allChecked)">
+              <label for="toggle-all">Mark all as complete</label>
+              <ul class="todo-list">
+                <li ng-repeat="todo in todos | filter:statusFilter track by $index" ng-class="{completed: todo.completed, editing: todo == editedTodo}">
+                  <div class="view">
+                    <input class="toggle" type="checkbox" ng-model="todo.completed">
+                    <label ng-dblclick="editTodo(todo)">{{todo.title}}</label>
+                    <button class="destroy" ng-click="removeTodo(todo)"></button>
+                  </div>
+                  <form ng-submit="doneEditing(todo)">
+                    <input class="edit" ng-trim="false" ng-model="todo.title" ng-blur="doneEditing(todo)" todo-escape="revertEditing(todo)" todo-focus="todo == editedTodo">
+                  </form>
+                </li>
+              </ul>
+            </section>
+            <footer class="footer" ng-show="todos.length" ng-cloak>
+              <span class="todo-count"><strong>{{remainingCount}}</strong>
+                <ng-pluralize count="remainingCount" when="{ one: 'item left', other: 'items left' }"></ng-pluralize>
+              </span>
+              <ul class="filters">
+                <li>
+                  <a ng-class="{selected: location.path() == '/'} " href="#/">All</a>
+                </li>
+                <li>
+                  <a ng-class="{selected: location.path() == '/active'}" href="#/active">Active</a>
+                </li>
+                <li>
+                  <a ng-class="{selected: location.path() == '/completed'}" href="#/completed">Completed</a>
+                </li>
+              </ul>
+              <button class="clear-completed" ng-click="clearDoneTodos()" ng-show="remainingCount < todos.length">Clear completed</button>
+            </footer>
+          </app>
+          <script src="node_modules/todomvc-common/base.js"></script>
+          <script src="js/iframeResizer.contentWindow.min.js"></script>
+          <script data-main="js/app/main" src="node_modules/requirejs/require.js"></script>
+        </body>
+      </html>
+    </template>
+    <iframe id="app2" ></iframe>
+    <template id="app2-tpl">
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta http-Equiv="Cache-Control" Content="no-cache">
+          <meta http-Equiv="Pragma" Content="no-cache">
+          <meta http-Equiv="Expires" Content="0">
+          <link rel="stylesheet" href="node_modules/todomvc-common/base.css">
+          <link rel="stylesheet" href="css/index.css">
+        </head>
+        <body>
+          <app2 class="todoapp" ng-controller="TodoController">
+            <header class="header">
+              <h1>todos</h1>
+              <form class="todo-form" ng-submit="addTodo()">
+                <input class="new-todo" placeholder="What needs to be done?" ng-model="newTodo" autofocus>
+              </form>
+            </header>
+            <section class="main" ng-show="todos.length" ng-cloak>
+              <input class="toggle-all" type="checkbox" ng-model="allChecked" ng-click="markAll(allChecked)">
+              <label for="toggle-all">Mark all as complete</label>
+              <ul class="todo-list">
+                <li ng-repeat="todo in todos | filter:statusFilter track by $index" ng-class="{completed: todo.completed, editing: todo == editedTodo}">
+                  <div class="view">
+                    <input class="toggle" type="checkbox" ng-model="todo.completed">
+                    <label ng-dblclick="editTodo(todo)">{{todo.title}}</label>
+                    <button class="destroy" ng-click="removeTodo(todo)"></button>
+                  </div>
+                  <form ng-submit="doneEditing(todo)">
+                    <input class="edit" ng-trim="false" ng-model="todo.title" ng-blur="doneEditing(todo)" todo-escape="revertEditing(todo)" todo-focus="todo == editedTodo">
+                  </form>
+                </li>
+              </ul>
+            </section>
+            <footer class="footer" ng-show="todos.length" ng-cloak>
+              <span class="todo-count"><strong>{{remainingCount}}</strong>
+                <ng-pluralize count="remainingCount" when="{ one: 'item left', other: 'items left' }"></ng-pluralize>
+              </span>
+              <ul class="filters">
+                <li>
+                  <a ng-class="{selected: location.path() == '/'} " href="#/">All</a>
+                </li>
+                <li>
+                  <a ng-class="{selected: location.path() == '/active'}" href="#/active">Active</a>
+                </li>
+                <li>
+                  <a ng-class="{selected: location.path() == '/completed'}" href="#/completed">Completed</a>
+                </li>
+              </ul>
+              <button class="clear-completed" ng-click="clearDoneTodos()" ng-show="remainingCount < todos.length">Clear completed</button>
+            </footer>
+          </app2>
+          <script src="node_modules/todomvc-common/base.js"></script>
+          <script src="js/iframeResizer.contentWindow.min.js"></script>
+          <script data-main="js/app2/main" src="node_modules/requirejs/require.js"></script>
+        </body>
+      </html>
+    </template>
+    <iframe id="app3"></iframe>
+    <template id="app3-tpl">
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta http-Equiv="Cache-Control" Content="no-cache">
+          <meta http-Equiv="Pragma" Content="no-cache">
+          <meta http-Equiv="Expires" Content="0">
+          <link rel="stylesheet" href="node_modules/todomvc-common/base.css">
+          <link rel="stylesheet" href="css/index.css">
+        </head>
+        <body>
+          <app3 ng-controller="WelcomeController">
+            <div>{{greeting}}</div>
+            <button ng-click='sayHello()'>greet</button>
+          </app3>
+          <script src="node_modules/todomvc-common/base.js"></script>
+          <script src="js/iframeResizer.contentWindow.min.js"></script>
+          <script data-main="js/app3/main" src="node_modules/requirejs/require.js"></script>
+        </body>
+      </html>
+    </template>
+    <script src="js/iframeResizer.min.js"></script>
+    <script src="js/start.js"></script>
+    <script src="js/iframeHashManager/dist/iframeHashManager.js"></script>
+    <script>iframeHashManager.default(window, '[data-manage-hash]')</script>
+  </body>
+</html>
