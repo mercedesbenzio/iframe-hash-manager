@@ -1,6 +1,6 @@
 {
   "name": "iframe-hash-manager",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Simple hash manager for the oneWeb multiple SPA iframe concept",
   "main": "dist/iframeHashManager.js",
   "scripts": {
