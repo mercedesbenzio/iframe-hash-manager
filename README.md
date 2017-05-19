@@ -23,7 +23,7 @@ yarn add iframe-hash-manager
 ```
 
 ```js
-var iframeHashManager = require('iframeHashManager')
+var iframeHashManager = require('iframe-hash-manager')
 iframeHashManager.default(window, {
   selector: 'iframe',       // document.querySelectorAll is used internally
                             // https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll
@@ -35,7 +35,7 @@ iframeHashManager.default(window, {
 or as ES6 module.
 
 ```js
-import iframeHashManager from 'iframeHashManager'
+import iframeHashManager from 'iframe-hash-manager'
 iframeHashManager(window)
 ```
 
