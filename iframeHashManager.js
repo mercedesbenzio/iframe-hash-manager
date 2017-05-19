@@ -8,15 +8,11 @@
 
 import F from './fp'
 import logic from './logic.js'
-
-
+import toArray from './toArray.js'
 
 // GENERAL UTILITY FUNCTIONS
 // getElements :: String -> NodeList HTMLElement
 const getElements  = window.document.querySelectorAll.bind(window.document)
-
-// toArray :: NodeList HTMLElement -> Array HTMLElement
-const toArray = Array.from.bind(Array)
 
 // URL format
 export default function bootstrap (window, options) {
