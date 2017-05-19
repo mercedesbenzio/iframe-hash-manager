@@ -71,7 +71,7 @@ export default function bootstrap (window, options) {
       logic.unwrapHash,
       logic.wrap,
       writeToLocation
-    ])(ev.newURL)
+    ])(ev.target.location.href)
 
   // FUNCTIONS FOR MULTIPLE IFRAMES
   // setDefaultHash :: Array iframe -> Effect window.location
