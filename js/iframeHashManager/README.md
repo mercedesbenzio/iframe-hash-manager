@@ -1,14 +1,11 @@
 # iframe-hash-manager
-Effortlessly synchronize a window's location hash with the hashes of multiple iframes in the site.
+Tiny library to effortlessly sync a window's location hash with the hashes of multiple iframes in the site.
 
 <a target="_blank" href="https://image.ibb.co/mCjPD5/Screen_Shot_2017_05_09_at_14_16_43.png">
   <img src="https://image.ibb.co/mCjPD5/Screen_Shot_2017_05_09_at_14_16_43.png" width="300px">
 </a>
 
-
 ## Usage
-**First: Assign an ID to all your SPA iframes.**
-
 > Note: Currently, changes in the master hash will not be reflected in the iframes.
 > Iframes will only be initialized once with the master hash.
 
@@ -21,9 +18,12 @@ As script from `dist/iframeHashManager.js`:
 ```
 
 As ES5 module. The second parameter is optional. The options shown below are the defaults.
+```bash
+yarn add iframe-hash-manager
+```
 
 ```js
-var iframeHashManager = require('iframeHashManager')
+var iframeHashManager = require('iframe-hash-manager')
 iframeHashManager.default(window, {
   selector: 'iframe',       // document.querySelectorAll is used internally
                             // https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll
@@ -35,9 +35,12 @@ iframeHashManager.default(window, {
 or as ES6 module.
 
 ```js
-import iframeHashManager from 'iframeHashManager'
+import iframeHashManager from 'iframe-hash-manager'
 iframeHashManager(window)
 ```
 
 ## Good Luck!
 <img src="https://hugelolcdn.com/hugegifs.com/i/687.gif">
+
+## Development
+Take a look at the `package.json` to find the scripts that may be useful for development.

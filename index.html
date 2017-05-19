@@ -146,14 +146,54 @@
         </body>
       </html>
     </template>
+    <template id="dynamic-tpl">
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta http-Equiv="Cache-Control" Content="no-cache">
+          <meta http-Equiv="Pragma" Content="no-cache">
+          <meta http-Equiv="Expires" Content="0">
+          <link rel="stylesheet" href="node_modules/todomvc-common/base.css">
+          <link rel="stylesheet" href="css/index.css">
+        </head>
+        <body>
+          <app3 ng-controller="WelcomeController">
+            <div>{{greeting}}</div>
+            <button ng-click='sayHello()'>greet</button>
+          </app3>
+          <script src="node_modules/todomvc-common/base.js"></script>
+          <script src="js/iframeResizer.contentWindow.min.js"></script>
+          <script data-main="js/app3/main" src="node_modules/requirejs/require.js"></script>
+        </body>
+      </html>
+    </template>
     <script src="js/iframeResizer.min.js"></script>
     <script src="js/start.js"></script>
     <script src="js/iframeHashManager/dist/iframeHashManager.js"></script>
+
     <script>
-      iframeHashManager.default(window, {
-        selector: '[data-manage-hash]',
-        id: iframe => iframe.id.toUpperCase()
-      })
+      window.addEventListener( "load", init, false );
+
+      function init () {
+        iframeHashManager.default(window, {
+          selector: '[data-manage-hash]'
+        })
+
+        nu = document.createElement('iframe')
+        nu.dataset.manageHash = true
+        nu.id = 'dynamic'
+        body = document.querySelectorAll('body')[0]
+        body.appendChild(nu)
+
+        // window.history.pushState('dynamic', 'dynamic', '/#')
+
+  //      iframeHashManager.default(window, {
+  //        selector: '[data-manage-hash]',
+  //        id: iframe => iframe.id.toUpperCase()
+  //      })
+      }
+
     </script>
+
   </body>
 </html>
