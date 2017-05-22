@@ -12,14 +12,14 @@ import toArray from './toArray.js'
 
 // GENERAL UTILITY FUNCTIONS
 // getElements :: String -> NodeList HTMLElement
-const getElements  = window.document.querySelectorAll.bind(window.document)
+const getElementsFrom = source => source.querySelectorAll.bind(source)
 
-// URL format
-export default function bootstrap (window, options) {
-
-  // defaults
-  const selector = (options || {}).selector || 'iframe'
-  const id       = (options || {}).id       || (iframe => iframe.id)
+export default function bootstrap ({
+    // defaults
+    context = window,
+    id = iframe => iframe.id,
+    selector = 'iframe'
+  } = {}) {
 
 
 
@@ -28,36 +28,32 @@ export default function bootstrap (window, options) {
   // Returns a function that collects all iframes that also match the given selector.
   // Note: Maybe this could be improved by combining the 'iframe' part to the given selector string.
   // We could then omit F.filter from the source code (maybe)
-  const getIframesBySelector = (window, selector) => () => F.compose([
-    getElements,
+  const getIframesBySelector = (context, selector) => () => F.compose([
+    getElementsFrom(context.document),
     toArray,
     F.filter(x => x.tagName === "IFRAME")
   ])(selector)
 
   // getIframes :: Void -> Array iframe
-  const getIframes = getIframesBySelector(window, selector)
+  const getIframes = getIframesBySelector(context, selector)
+  const iframes = getIframes()
 
-  // writeToLocation :: String -> Effect window.location
+  // writeToLocation :: String -> Effect context.location
   function writeToLocation (hash) {
-    history.pushState({}, document.title || "Mercedes Benz", hash);
+    history.pushState({}, context.document.title, hash);
   };
-
-  // attachListenerToiframe :: iframe -> Int -> Effect iframe
-  function attachListenerToiframe (iframeIndex, eventId, handler) {
-    getIframes()[iframeIndex].contentWindow.addEventListener(eventId, handler)
-  }
 
   // injectAfterLoad :: Array String -> Array iframes -> Effect Array iframes
   const injectAfterLoad = (hash, iframe, index) => {
     iframe.addEventListener('load', function () {
-      getIframes()[index].contentWindow.location.hash = hash
+      iframe.contentWindow.location.hash = hash
     })
   }
 
   // bindRouting :: iframe -> Int -> Effect iframe
   const bindRouting = handler => (iframe, index) => {
     iframe.addEventListener('load', function () {
-      attachListenerToiframe(index, 'hashchange', handler(iframe))
+      iframe.contentWindow.addEventListener('hashchange', handler(iframe))
     })
     return iframe
   }
@@ -66,7 +62,7 @@ export default function bootstrap (window, options) {
 
 
   // FUNCTIONS FOR A SINGLE IFRAME
-  // handleSlaveHashChangeFor :: () -> Event hashchange -> Effect window.location
+  // handleSlaveHashChangeFor :: () -> Event hashchange -> Effect context.location
   const handleSingleSlaveHashChange = () => ev => F.compose([
       logic.unwrapHash,
       logic.wrap,
@@ -74,7 +70,7 @@ export default function bootstrap (window, options) {
     ])(ev.target.location.href)
 
   // FUNCTIONS FOR MULTIPLE IFRAMES
-  // setDefaultHash :: Array iframe -> Effect window.location
+  // setDefaultHash :: Array iframe -> Effect context.location
   const setDefaultHashFrom = F.compose([
     F.map(createSingleSlaveSkeleton),
     F.join(''),
@@ -82,12 +78,12 @@ export default function bootstrap (window, options) {
     writeToLocation
   ])
 
-  // handleSlaveHashChangeFor :: HTMLIFrameElement -> Event hashchange -> Effect window.location
+  // handleSlaveHashChangeFor :: HTMLIFrameElement -> Event hashchange -> Effect context.location
   const handleSlaveHashChangeFor = iframe => ev => {
     const hash = logic.unwrapHash(ev.newURL)
     const appId = id(iframe)
 
-    writeToLocation(logic.injectIntoMaster(appId, hash, window.location.hash))
+    writeToLocation(logic.injectIntoMaster(appId, hash, context.location.hash))
   }
 
 
@@ -108,7 +104,7 @@ export default function bootstrap (window, options) {
   function init () {
 
     function initOne(iframes) {
-      if (window.location.hash !== "") {
+      if (context.location.hash !== "") {
         F.map2(injectAfterLoad)([location.hash])(iframes)
       }
       F.map(bindRouting(handleSingleSlaveHashChange))(iframes)
@@ -116,7 +112,7 @@ export default function bootstrap (window, options) {
 
     function initMulti(iframes) {
       // just overwrite undefined or empty master hash
-      if (logic.unwrapHash(window.location.hash) === "" || !window.location.hash) {
+      if (logic.unwrapHash(context.location.hash) === "" || !context.location.hash) {
         setDefaultHashFrom(iframes)
       } else {
         // otherwise, restore from master
@@ -127,7 +123,6 @@ export default function bootstrap (window, options) {
     }
 
     // iframes :: Array iframe
-    const iframes = getIframes()
     iframes.length > 1 ? initMulti(iframes) : initOne(iframes)
   }
 
