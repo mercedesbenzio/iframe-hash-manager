@@ -4,8 +4,8 @@
   "description": "Simple hash manager for the oneWeb multiple SPA iframe concept",
   "main": "dist/iframeHashManager.js",
   "scripts": {
-    "test": "ava *.spec.js",
-    "watch-test": "ava *.spec.js --watch",
+    "test": "ava src/*.spec.js",
+    "watch-test": "ava src/*.spec.js --watch",
     "build": "webpack",
     "watch-build": "webpack --watch",
     "prepublish": "npm run test && npm run build"

@@ -4,7 +4,7 @@ var path = require('path')
 module.exports = function (options) {
   options = options || {}
   return {
-    entry: './iframeHashManager',
+    entry: './index',
     output: {
       filename: 'iframeHashManager.js',
       path: path.resolve(__dirname, 'dist'),
