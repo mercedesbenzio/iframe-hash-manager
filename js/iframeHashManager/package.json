@@ -1,12 +1,13 @@
 {
   "name": "iframe-hash-manager",
-  "version": "0.0.3",
-  "description": "Simple hash manager for the oneWeb multiple SPA iframe concept",
+  "version": "0.1.0",
+  "description": "Simple module for managing the routes of multiple iframes in a pain-free way",
   "main": "dist/iframeHashManager.js",
   "scripts": {
-    "test": "ava *.spec.js",
-    "watch-test": "ava *.spec.js --watch",
+    "test": "ava src/*.spec.js",
+    "watch-test": "ava src/*.spec.js --watch",
     "build": "webpack",
+    "watch-build": "webpack --watch",
     "prepublish": "npm run test && npm run build"
   },
   "keywords": ["oneweb", "workbench", "routing", "spa"],

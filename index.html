@@ -175,22 +175,19 @@
       window.addEventListener( "load", init, false );
 
       function init () {
-        iframeHashManager.default(window, {
+        iframeHashManager.default({
+          context: window,
           selector: '[data-manage-hash]'
         })
-
-        nu = document.createElement('iframe')
-        nu.dataset.manageHash = true
-        nu.id = 'dynamic'
         body = document.querySelectorAll('body')[0]
-        body.appendChild(nu)
 
-        // window.history.pushState('dynamic', 'dynamic', '/#')
-
-  //      iframeHashManager.default(window, {
-  //        selector: '[data-manage-hash]',
-  //        id: iframe => iframe.id.toUpperCase()
-  //      })
+        window.addIframe = () => {
+          nu = document.createElement('iframe')
+          nu.dataset.manageHash = true
+          nu.id = 'dynamic'
+          body.appendChild(nu)
+          window.removeIframe = () => body.removeChild(nu)
+        }
       }
 
     </script>

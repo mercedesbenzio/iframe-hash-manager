@@ -52,4 +52,23 @@ const tail = arr => arr.slice(1, arr.length)
 // Like tail. Takes a delimiter, a string and returns an array of strings split using the delimiter
 const split = delim => str => str.split(delim)
 
-export default {compose, map, map2, filter, join, log, tail, split}
+// difference :: Array -> Array -> Array
+// difference(['a', 'b', 'c'])(['a', 'b']) -> ['c']
+const difference = arr1 => arr2 => [...arr1].filter( item => !(new Set(arr2)).has(item) )
+
+// flatten :: Array Array -> Array
+// flatten([ ['a', 'b', 'c'], ['d', 'e'] ]) -> ['a', 'b', 'c', 'd', 'e']
+const flatten = arr => Array.prototype.concat(...arr)
+
+export default {
+  compose,
+  difference,
+  filter,
+  flatten,
+  join,
+  log,
+  map,
+  map2,
+  split,
+  tail
+}
