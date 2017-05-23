@@ -3,9 +3,8 @@ import logic from './logic'
 
 
 export default id => iframes => () => {
-  console.log('generating hash', id, iframes)
 
-  const encodeIframeRoute = iframe => `_${id(iframe.el)}.${logic.unwrapHash(iframe.el.contentWindow.location.hash) || ''}_,`
+  const encodeIframeRoute = iframe => `_${id(iframe)}.${logic.unwrapHash(iframe.contentWindow.location.hash) || ''}_,`
 
   const generateHashFromMultiple = F.compose([
     F.map( encodeIframeRoute ),
@@ -14,7 +13,7 @@ export default id => iframes => () => {
   ])
 
   if (iframes.length === 1) {
-    return iframes[0].el.contentWindow.location.hash
+    return iframes[0].contentWindow.location.hash
   } else if (iframes.length > 1) {
     return generateHashFromMultiple(iframes)
   } else {

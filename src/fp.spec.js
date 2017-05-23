@@ -16,3 +16,5 @@ test('tail',       t => t.deepEqual( F.tail([1, 2, 3]), [2,3]) )
 test('split',      t => t.deepEqual( F.split(' ')('Hello World'), ['Hello', 'World']) )
 
 test('difference', t => t.deepEqual( F.difference(['a', 'b', 'c', 'd', 'e'])(['a', 'b', 'd']), ['c', 'e'] ) )
+
+test('flatten',    t => t.deepEqual( F.flatten([ ['a', 'b', 'c'], ['d', 'e'] ]), ['a', 'b', 'c', 'd', 'e'] ) )

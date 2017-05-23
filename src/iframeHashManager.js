@@ -12,9 +12,6 @@ import toArray      from './toArray'
 import generateHash from './generateHash'
 import * as extract from './extractRoutes.js'
 
-// GENERAL UTILITY FUNCTIONS
-// getElements :: String -> NodeList HTMLElement
-const getElementsFrom = source => source.querySelectorAll.bind(source)
 
 export default function bootstrap ({
     // defaults
@@ -23,27 +20,62 @@ export default function bootstrap ({
     selector = 'iframe'
   } = {}) {
 
-  // Iframe :: { el: HTMLIFrameElement, bound: bool}
-  const iframe = el => ({el: el, bound: false})
+  // GENERAL UTILITY FUNCTIONS
+  // getElements :: String -> NodeList HTMLElement
+  const getElementsFrom = source => source.querySelectorAll.bind(source)
 
   // FUNCTION SHARED BETWEEN SINGLE & MULTI USE CASE
   // getIframesBySelector :: String -> getIframes
   // Returns a function that collects all iframes that also match the given selector.
   // Note: Maybe this could be improved by combining the 'iframe' part to the given selector string.
   // We could then omit F.filter from the source code (maybe)
-  const getIframesBySelector = (context, selector) => () => F.compose([
-    getElementsFrom(context.document),
+  const getIframesBySelector = (context, source, selector) => () => F.compose([
+    getElementsFrom(source),
     toArray,
-    F.filter(x => x.tagName === "IFRAME"),
-    F.map(iframe)
+    F.filter(x => x.tagName === "IFRAME")
   ])(selector)
 
 
   // getIframes :: Void -> Array iframe
-  const getIframes = getIframesBySelector(context, selector)
+  const getIframes = getIframesBySelector(context, context.document, selector)
 
+  // INITIALIZE
   const iframes = getIframes()
   const initialRoutes = extract.fromHash(context.location.hash)
+  const matchedBySelector = iframe => getIframesBySelector(context, iframe.parentElement, selector)().indexOf(iframe) !== -1
+
+  // OBSERVE ADDITIONS & REMOVEALS OF IFRAMES
+  const obs = new MutationObserver( mutations => {
+    // 1. handle additions
+    // filter mutations
+    F.compose([
+      // get all dom nodes added in the event
+      F.map(mutation => toArray(mutation.addedNodes)),
+      F.flatten,
+      // decide if they should be added to our `iframes` array
+      F.filter( matchedBySelector ),
+      F.map(iframe => {
+        bindRouting(iframe)
+        iframes.push(iframe)
+      })
+    ])(mutations)
+
+    // 1. handle removals
+    // filter mutations
+    F.compose([
+      // get all dom nodes added in the event
+      F.map(mutation => toArray(mutation.removedNodes)),
+      F.flatten,
+      // decide if they should be added to our `iframes` array
+      F.map(iframe => {
+        undbindRouting(iframe)
+        // remove iframe from iframes
+        iframes.splice(iframes.indexOf(iframe), 1)
+      })
+    ])(mutations)
+  })
+
+  obs.observe(context.document.querySelector('body'), {childList: true})
 
   // injectAfterLoad :: Array String -> Array iframes -> Effect Array iframes
   const injectAfterLoad = (hash, iframe) => {
@@ -53,44 +85,49 @@ export default function bootstrap ({
   }
 
   // Route :: { id: String, value: String}
-
   // injectInitial :: initialRoutes -> [Route] -> [iframe]
-  function injectInitial (routes, iframes) {
+  function injectRoutes (routes, iframes) {
     // inject if there are multiple routes extracted by matching ID
     // NOTE: iframes inherit the hash by default.
     if ( (routes.length > 1) && (iframes.length > 1) ) {
       F.map( route => {
         F.map( iframe => {
-          if ( route.id === id(iframe.el) ) {
-            injectAfterLoad( logic.wrap(route.value), iframe.el )
+          if ( route.id === id(iframe) ) {
+            injectAfterLoad( logic.wrap(route.value), iframe )
           }
         })(iframes)
       })(routes)
     }
   }
 
-  injectInitial(initialRoutes, iframes)
+  injectRoutes(initialRoutes, iframes)
 
-  // createHash :: () -> String
-  // generates a hash based on the currently selected iframes
-  const createHash = generateHash(id)(iframes)
+  // SYNCHRONIZE
 
-  // writeToLocation :: String -> Effect context.location
-  const writeToLocation = hash => history.pushState({}, context.document.title, hash)
+  // UPSTREAM
+  // updateLocation :: (IFrameDOMElement -> String) -> Array IFrameDOMElement -> Effect context
+  const updateLocation = () => history.pushState({}, context.document.title, generateHash(id)(iframes)())
 
-  // bindRouting :: iframe -> Int -> Effect iframe
+  // bindRouting :: iframe -> Effect iframe
   const bindRouting = iframe => {
-    iframe.el.addEventListener('load', function () {
-      iframe.el.contentWindow.addEventListener(
-        'hashchange',
-        function (event) {
-          const newHash = createHash()
-          writeToLocation(newHash)
-        }
-      )
+    iframe.addEventListener('load', function () {
+      iframe.contentWindow.addEventListener( 'hashchange', updateLocation )
     })
-    return iframe.el
+  }
+
+  // bindRouting :: iframe -> Effect iframe
+  const undbindRouting = iframe => {
+    iframe.addEventListener('load', function () {
+      iframe.contentWindow.removeEventListener( 'hashchange', updateLocation )
+    })
   }
 
   F.map(bindRouting)(iframes)
+
+  // DOWNSTREAM
+  context.addEventListener( 'hashchange', ev => {
+    const newRoutes = extract.fromHash(ev.target.location.hash)
+    const injectRoute = (route, iframe) => iframe.contentWindow.location.hash = logic.wrap(route.value)
+    F.map2( injectRoute )(newRoutes)(iframes)
+  })
 }
