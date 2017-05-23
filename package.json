@@ -1,7 +1,7 @@
 {
   "name": "iframe-hash-manager",
-  "version": "0.0.3",
-  "description": "Simple hash manager for the oneWeb multiple SPA iframe concept",
+  "version": "0.1.0",
+  "description": "Simple module for managing the routes of multiple iframes in a pain-free way",
   "main": "dist/iframeHashManager.js",
   "scripts": {
     "test": "ava src/*.spec.js",

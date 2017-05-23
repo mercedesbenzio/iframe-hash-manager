@@ -2,7 +2,7 @@
 Tiny library to effortlessly sync a window's location hash with the hashes of multiple iframes in the site.
 
 <a target="_blank" href="https://image.ibb.co/mCjPD5/Screen_Shot_2017_05_09_at_14_16_43.png">
-  <img src="https://image.ibb.co/mCjPD5/Screen_Shot_2017_05_09_at_14_16_43.png" width="300px">
+  <img src="https://cdn.pbrd.co/images/9IHOGGr70.png" width="300px">
 </a>
 
 ## Usage
@@ -24,7 +24,8 @@ yarn add iframe-hash-manager
 
 ```js
 var iframeHashManager = require('iframe-hash-manager')
-iframeHashManager.default(window, {
+iframeHashManager.default({
+  context: window,          // you can pass any context, but context MUST be a window object
   selector: 'iframe',       // document.querySelectorAll is used internally
                             // https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll
   id: iframe => iframe.id   // The function used to generate the iframe id
