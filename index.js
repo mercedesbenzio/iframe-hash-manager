@@ -1,1 +1,2 @@
-export * from './src/iframeHashManager'
+import boostrap from './src/iframeHashManager'
+export default boostrap
