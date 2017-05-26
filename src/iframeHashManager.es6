@@ -10,7 +10,7 @@ import F            from './fp'
 import logic        from './logic'
 import toArray      from './toArray'
 import generateHash from './generateHash'
-import * as extract from './extractRoutes.js'
+import * as extract from './extractRoutes'
 
 
 export default function bootstrap ({
