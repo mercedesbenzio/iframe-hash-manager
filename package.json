@@ -1,11 +1,11 @@
 {
   "name": "iframe-hash-manager",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Simple module for managing the routes of multiple iframes in a pain-free way",
   "main": "dist/iframeHashManager.js",
   "scripts": {
-    "test": "ava src/*.spec.js",
-    "watch-test": "ava src/*.spec.js --watch",
+    "test": "ava src/*.spec.es6",
+    "watch-test": "ava src/*.spec.es6 --watch",
     "build": "webpack",
     "watch-build": "webpack --watch",
     "prepublish": "npm run test && npm run build"
