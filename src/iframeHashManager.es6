@@ -52,7 +52,7 @@ export default function bootstrap ({
   // INITIALIZE
   const iframes = getIframes()
   const initialRoutes = extract.fromHash(context.location.hash)
-  const matchedBySelector = iframe => getIframesBySelector(context, iframe.parentElement, selector)().indexOf(iframe) !== -1
+  const matchedBySelector = iframe => getIframesBySelector(context, iframe.parentElement || iframe, selector)().indexOf(iframe) !== -1
 
   // OBSERVE ADDITIONS & REMOVEALS OF IFRAMES
   const obs = new MutationObserver( mutations => {
