@@ -52,7 +52,11 @@ export default function bootstrap ({
   // INITIALIZE
   const iframes = getIframes()
   const initialRoutes = extract.fromHash(context.location.hash)
-  const matchedBySelector = iframe => getIframesBySelector(context, iframe.parentElement, selector)().indexOf(iframe) !== -1
+
+  const matchedBySelector = iframe => iframe.parentElement
+    ? getIframesBySelector(context, iframe.parentElement, selector)().indexOf(iframe) !== -1
+    // if the iframe has no parentElement, it's not attached.
+    : false
 
   // OBSERVE ADDITIONS & REMOVEALS OF IFRAMES
   const obs = new MutationObserver( mutations => {
