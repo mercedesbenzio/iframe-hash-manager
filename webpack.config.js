@@ -4,7 +4,7 @@ var path = require('path')
 module.exports = function (options) {
   options = options || {}
   return {
-    entry: './index',
+    entry: './src',
     resolve: {
       extensions: [ '.es6', '.js' ]
     },
