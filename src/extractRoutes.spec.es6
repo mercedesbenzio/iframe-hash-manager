@@ -1,5 +1,5 @@
 import test from 'ava'
-import * as extract from './extractRoutes.js'
+import * as extract from './extractRoutes'
 
 const multiHash = '#multi/app.active_,_app2.completed_,_app3._,'
 const singleHash = '#/some/random/path?query=param'

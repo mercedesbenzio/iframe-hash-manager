@@ -4,13 +4,17 @@
   "description": "Simple module for managing the routes of multiple iframes in a pain-free way",
   "main": "dist/iframeHashManager.js",
   "scripts": {
-    "test": "",
-    "watch-test": "ava src/*.spec.es6 --watch",
+    "test": "webpack --config webpack.tests.js && ava src/*.spec.js",
     "build": "webpack",
     "watch-build": "webpack --watch",
     "prepublish": "./npm run test && ./npm run build"
   },
-  "keywords": ["oneweb", "workbench", "routing", "spa"],
+  "keywords": [
+    "oneweb",
+    "workbench",
+    "routing",
+    "spa"
+  ],
   "author": "Jan Wirth <jan.wirth@cinteo.com>",
   "license": "MIT",
   "devDependencies": {
@@ -18,7 +22,8 @@
     "babel-cli": "^6.24.1",
     "babel-loader": "^7.0.0",
     "babel-preset-latest": "^6.24.1",
-    "webpack": "^2.5.0"
+    "webpack": "^2.5.0",
+    "webpack-node-externals": "^1.6.0"
   },
   "ava": {
     "require": [
