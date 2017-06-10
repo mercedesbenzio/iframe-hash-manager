@@ -8,7 +8,7 @@
     "watch-test": "ava src/*.spec.es6 --watch",
     "build": "webpack",
     "watch-build": "webpack --watch",
-    "prepublish": "npm run test && npm run build"
+    "prepublish": "./npm run test && ./npm run build"
   },
   "keywords": ["oneweb", "workbench", "routing", "spa"],
   "author": "Jan Wirth <jan.wirth@cinteo.com>",
