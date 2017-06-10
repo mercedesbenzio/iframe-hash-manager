@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if ! [ -x "$(command -v npm)" ]; then
+  yarn "$@"
+else
+  npm "$@"
+fi
