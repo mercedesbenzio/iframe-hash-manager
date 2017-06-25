@@ -91,8 +91,10 @@ export default function bootstrap ({
 
   obs.observe(context.document.querySelector('body'), {childList: true})
 
-  // injectAfterLoad :: Array String -> Array iframes -> Effect Array iframes
-  const injectAfterLoad = (hash, iframe) => {
+  // injectHash :: Array String -> Array iframes -> Effect Array iframes
+  const injectHash = hash => iframe => {
+    // Double inject required for some reason.
+    iframe.contentWindow.location.hash = hash
     iframe.addEventListener('load', function () {
       iframe.contentWindow.location.hash = hash
     })
@@ -107,7 +109,7 @@ export default function bootstrap ({
       F.map( route => {
         F.map( iframe => {
           if ( route.id === id(iframe) ) {
-            injectAfterLoad( logic.wrap(route.value), iframe )
+            injectHash( logic.wrap(route.value) )( iframe )
           }
         })(iframes)
       })(routes)
