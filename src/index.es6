@@ -122,7 +122,7 @@ export default function bootstrap ({
 
   // UPSTREAM
   // updateLocation :: (IFrameDOMElement -> String) -> Array IFrameDOMElement -> Effect context
-  const updateLocation = () => history.pushState({}, context.document.title, generateHash(id)(iframes)())
+  const updateLocation = ( event ) => history.pushState({}, context.document.title, generateHash(id)([event.target.frameElement])())
 
   // bindRouting :: iframe -> Effect iframe
   const bindRouting = iframe => {
