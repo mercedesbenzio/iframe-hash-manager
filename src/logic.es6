@@ -37,8 +37,8 @@ function injectIntoMaster(slaveHashId, newSlaveHash, masterHash) {
 
 // wrap :: String -> String
 // converts some/route to #/some/route
-function wrap (hashValue) { return "#/" + ( hashValue || "" ) }
+function wrap (hashValue) { return "#" + ( hashValue || "" ) }
 
 // unwrapHash :: String -> String
 // converts someUrl.com/#/some/route to some/route
-function unwrapHash (url) { return url.split('#/')[1]}
+function unwrapHash (url) { return url.split('#')[1]}

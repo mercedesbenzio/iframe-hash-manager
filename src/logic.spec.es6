@@ -22,8 +22,8 @@ test('inject', t =>
 )
 
 test('wrap', t =>
-  t.is(logic.wrap("some/route"), "#/some/route")
+  t.is(logic.wrap("/some/route"), "#/some/route")
 )
 test('unwrapHash', t =>
-  t.is(logic.unwrapHash("someUrl.com/#/some/route"), "some/route")
+  t.is(logic.unwrapHash("someUrl.com/#/some/route"), "/some/route")
 )
