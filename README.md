@@ -37,7 +37,7 @@ or as ES6 module.
 
 ```js
 import iframeHashManager from 'iframe-hash-manager'
-iframeHashManager(window)
+iframeHashManager() // Defaults as above
 ```
 
 ## Good Luck!
