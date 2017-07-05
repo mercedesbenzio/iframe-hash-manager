@@ -49,10 +49,6 @@ export default function bootstrap ({
   // getIframes :: Void -> Array iframe
   const getIframes = getIframesBySelector(context, context.document, selector)
 
-  // INITIALIZE
-  const iframes = getIframes()
-  const initialRoutes = extract.fromHash(context.location.hash)
-
   const matchedBySelector = iframe => iframe.parentElement
     ? getIframesBySelector(context, iframe.parentElement, selector)().indexOf(iframe) !== -1
     // if the iframe has no parentElement, it's not attached.
@@ -66,25 +62,20 @@ export default function bootstrap ({
       // get all dom nodes added in the event
       F.map(mutation => toArray(mutation.addedNodes)),
       F.flatten,
-      // decide if they should be added to our `iframes` array
       F.filter( matchedBySelector ),
       F.map(iframe => {
         bindRouting(iframe)
-        iframes.push(iframe)
       })
     ])(mutations)
 
-    // 1. handle removals
+    // 2. handle removals
     // filter mutations
     F.compose([
-      // get all dom nodes added in the event
+      // get all dom nodes removed in the event
       F.map(mutation => toArray(mutation.removedNodes)),
       F.flatten,
-      // decide if they should be added to our `iframes` array
       F.map(iframe => {
         undbindRouting(iframe)
-        // remove iframe from iframes
-        iframes.splice(iframes.indexOf(iframe), 1)
       })
     ])(mutations)
   })
@@ -93,57 +84,63 @@ export default function bootstrap ({
 
   // injectHash :: Array String -> Array iframes -> Effect Array iframes
   const injectHash = hash => iframe => {
-    // Double inject required for some reason.
+    const wrappedHash = logic.wrap(hash)
+    // Re-inject after 'load' event
     iframe.contentWindow.location.hash = hash
     iframe.addEventListener('load', function () {
       iframe.contentWindow.location.hash = hash
     })
   }
 
+  // INITIALIZE the iframes with the correct hashes
+  // IIFE
   // Route :: { id: String, value: String}
-  // injectInitial :: initialRoutes -> [Route] -> [iframe]
-  function injectRoutes (routes, iframes) {
-    // inject if there are multiple routes extracted by matching ID
-    // NOTE: iframes inherit the hash by default.
+  // injectRoutes :: [Route] -> [iframe] -> [Effect Iframe]
+  (function injectRoutes (routes, iframes) {
+    // if there are multiple routes, inject into iframes by matching the ID
     if ( (routes.length > 1) && (iframes.length > 1) ) {
       F.map( route => {
         F.map( iframe => {
           if ( route.id === id(iframe) ) {
-            injectHash( logic.wrap(route.value) )( iframe )
+            injectHash( route.value )( iframe )
           }
         })(iframes)
       })(routes)
+    // otherwise, inject the default route into all iframes
+    } else if ( routes.length === 1 && (routes[0] || {}).id === 'default') {
+      F.map( iframe => {
+        injectHash( routes[0].value )( iframe )
+      })(iframes)
     }
-  }
+  })(extract.fromHash(context.location.hash), getIframes())
 
-  injectRoutes(initialRoutes, iframes)
-
-  // SYNCHRONIZE
-
+  // SYNCHRONIZE iframes with context
   // UPSTREAM
-  // updateLocation :: (IFrameDOMElement -> String) -> Array IFrameDOMElement -> Effect context
-  const updateLocation = ( event ) => history.pushState({}, context.document.title, generateHash(id)([event.target.frameElement])())
+  // updateLocation :: Event -> Effect context
+  const updateLocation = () => context.location.hash = generateHash(id)(getIframes())
 
-  // bindRouting :: iframe -> Effect iframe
+  // bindRouting :: iframe -> subscribe iframe
   const bindRouting = iframe => {
     iframe.addEventListener('load', function () {
       iframe.contentWindow.addEventListener( 'hashchange', updateLocation )
     })
   }
 
-  // bindRouting :: iframe -> Effect iframe
+  // undbindRouting :: iframe -> unsubscribe iframe
   const undbindRouting = iframe => {
     iframe.addEventListener('load', function () {
       iframe.contentWindow.removeEventListener( 'hashchange', updateLocation )
     })
   }
 
-  F.map(bindRouting)(iframes)
+  F.map(bindRouting)(getIframes())
+
+  function injectNewHashes (ev) {
+    const newRoutes = extract.fromHash(ev.target.location.hash)
+    const injectRoute = (route, iframe) => iframe ? iframe.contentWindow.location.hash = logic.wrap(route.value) : 'noop'
+    F.map2( injectRoute )(newRoutes)(getIframes())
+  }
 
   // DOWNSTREAM
-  context.addEventListener( 'hashchange', ev => {
-    const newRoutes = extract.fromHash(ev.target.location.hash)
-    const injectRoute = (route, iframe) => iframe.contentWindow.location.hash = logic.wrap(route.value)
-    F.map2( injectRoute )(newRoutes)(iframes)
-  })
+  context.addEventListener( 'hashchange', injectNewHashes )
 }

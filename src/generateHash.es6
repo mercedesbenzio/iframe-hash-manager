@@ -2,7 +2,8 @@ import F from './fp'
 import logic from './logic'
 
 
-export default id => iframes => () => {
+// generateHash :: (iframe -> String) -> [iframe] -> String
+export default id => iframes => {
 
   const encodeIframeRoute = iframe => `_${id(iframe)}.${logic.unwrapHash(iframe.contentWindow.location.hash) || ''}_,`
 
