@@ -96,7 +96,7 @@ export default function bootstrap ({
   // IIFE
   // Route :: { id: String, value: String}
   // injectRoutes :: [Route] -> [iframe] -> [Effect Iframe]
-  (function injectRoutes (routes, iframes) {
+  function injectRoutes (routes, iframes) {
     // if there are multiple routes, inject into iframes by matching the ID
     if ( (routes.length > 1) && (iframes.length > 1) ) {
       F.map( route => {
@@ -112,7 +112,9 @@ export default function bootstrap ({
         injectHash( routes[0].value )( iframe )
       })(iframes)
     }
-  })(extract.fromHash(context.location.hash), getIframes())
+  }
+
+  injectRoutes( extract.fromHash(context.location.hash), getIframes() )
 
   // SYNCHRONIZE iframes with context
   // UPSTREAM
