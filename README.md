@@ -14,7 +14,7 @@ As script from `dist/iframeHashManager.js`:
 <iframe id="facebook-killer" class='spa'></iframe>
 <iframe id="instagram-killer" class='spa'></iframe>
 <script src="js/iframeHashManager.js"></script>
-<script >iframeHashManager.default(window)</script>
+<script >iframeHashManager(window)</script>
 ```
 
 As ES5 module. The second parameter is optional. The options shown below are the defaults.
@@ -24,7 +24,7 @@ yarn add iframe-hash-manager
 
 ```js
 var iframeHashManager = require('iframe-hash-manager')
-iframeHashManager.default({
+iframeHashManager({
   context: window,          // you can pass any context, but context MUST be a window object
   selector: 'iframe',       // document.querySelectorAll is used internally
                             // https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll
