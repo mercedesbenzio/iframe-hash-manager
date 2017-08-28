@@ -30,7 +30,7 @@ function fromHash (hash = '') {
   } else if (hash.startsWith('#/')) {
     return [{
       id: 'default',
-      value: hash.split('#/')[1]
+      value: hash.split('#')[1]
     }]
   } else {
     return []
