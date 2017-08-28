@@ -6,7 +6,7 @@ const singleHash = '#/some/random/path?query=param'
 
 test('from single hash', t => t.deepEqual(
     extract.fromHash(singleHash)
-  , [ {id: 'default', value: 'some/random/path?query=param'} ]
+  , [ {id: 'default', value: '/some/random/path?query=param'} ]
 ))
 
 test('from multi hash', t => t.deepEqual(
