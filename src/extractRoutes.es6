@@ -27,7 +27,7 @@ function fromHash (hash = '') {
       .slice(0, -1)
 
     return F.map(matchRoute)(parts)
-  } else if (hash.startsWith('#/')) {
+  } else if (hash.startsWith('#')) {
     return [{
       id: 'default',
       value: hash.split('#')[1]
