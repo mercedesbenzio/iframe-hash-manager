@@ -119,7 +119,11 @@ export default function bootstrap ({
   // SYNCHRONIZE iframes with context
   // UPSTREAM
   // updateLocation :: Event -> Effect context
-  const updateLocation = () => context.location.hash = generateHash(id)(getIframes())
+  const updateLocation = () => {
+    const newHash = generateHash(id)(getIframes())
+    // silently changing context hash (replaceState won't trigger 'hashchange' nor adds to history length)
+    return context.history.replaceState(null, '', newHash)
+  }
 
   // bindRouting :: iframe -> subscribe iframe
   const bindRouting = iframe => {
