@@ -169,13 +169,13 @@
     </template>
     <script src="js/iframeResizer.min.js"></script>
     <script src="js/start.js"></script>
-    <script src="js/iframeHashManager/dist/iframeHashManager.js"></script>
+    <script src="js/iframeHashManager.js"></script>
 
     <script>
       window.addEventListener( "load", init, false );
 
       function init () {
-        iframeHashManager.default({
+        iframeHashManager({
           context: window,
           selector: '[data-manage-hash]'
         })
