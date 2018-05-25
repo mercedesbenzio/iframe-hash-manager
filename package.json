@@ -4,8 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build; npm run serve",
-    "build": "cd js/iframeHashManager/; npm run build",
     "serve": "node_modules/http-server/bin/http-server"
   },
   "author": "",
