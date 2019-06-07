@@ -1,0 +1,5 @@
+# Browsers that we support (test with: https://browserl.ist/)
+
+last 2 versions
+ie >= 11
+not ie <= 10
