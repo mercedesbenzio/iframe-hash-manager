@@ -1,5 +1,5 @@
 import logic from './logic'
-import {test} from 'ava'
+import test from 'ava'
 
 const testMasterHash = "#_td.schedule?tdbLng=en&tdbCC=GB&tdbMCID=s-class&tdbMBTID=coupe&tdbTransmission=AUTOMATIC&tdbFuelType=PETROL&dealerOutletId=GS0001780_,"
  + "_dcp.aroisetn#$%@#$@#$dcp_,"

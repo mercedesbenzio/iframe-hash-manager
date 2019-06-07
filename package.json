@@ -3,11 +3,15 @@
   "version": "0.3.7",
   "description": "Simple module for managing the routes of multiple iframes in a pain-free way",
   "main": "dist/iframeHashManager.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mercedesbenzio/iframe-hash-manager.git"
+  },
   "scripts": {
     "test": "webpack --config webpack.tests.js && ava src/*.spec.js",
     "build": "webpack",
     "watch-build": "webpack --watch",
-    "prepublish": "./npm run test && ./npm run build"
+    "prepublishOnly": "./npm run test && ./npm run build"
   },
   "keywords": [
     "oneweb",
@@ -18,18 +22,19 @@
   "author": "Jan Wirth <jan.wirth@cinteo.com>",
   "license": "MIT",
   "devDependencies": {
-    "ava": "^0.19.1",
-    "babel-core": "^6.25.0",
-    "babel-loader": "^7.0.0",
-    "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-preset-env": "^1.5.2",
-    "webpack": "^3.3.0",
-    "webpack-node-externals": "^1.6.0"
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/register": "^7.4.4",
+    "ava": "^2.0.0",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-add-module-exports": "^1.0.2",
+    "webpack": "^4.33.0",
+    "webpack-cli": "^3.3.2",
+    "webpack-node-externals": "^1.7.2"
   },
   "ava": {
     "require": [
-      "babel-register"
-    ],
-    "babel": "inherit"
+      "@babel/register"
+    ]
   }
 }

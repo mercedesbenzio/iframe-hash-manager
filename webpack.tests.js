@@ -4,6 +4,7 @@ const path = require('path')
 module.exports = function (options) {
   options = options || {}
   return {
+    mode: 'development',
     entry: {
       'extractRoutes.spec': './src/extractRoutes.spec',
       'fp.spec': './src/fp.spec',
@@ -19,11 +20,11 @@ module.exports = function (options) {
     },
     externals: [nodeExternals()],
     module: {
-      loaders: [
+      rules: [
         {
           test: /\.js$/,
           exclude: /node_modules/,
-          loaders: ['babel-loader']
+          loader: 'babel-loader'
         }
       ]
     }
