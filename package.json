@@ -4,10 +4,14 @@
   "description": "Simple module for managing the routes of multiple iframes in a pain-free way",
   "main": "dist/iframeHashManager.js",
   "scripts": {
-    "test": "webpack --config webpack.tests.js && ava src/*.spec.js",
+    "test": "npm run test:coverage",
+    "test:nocoverage": "ava src/*.spec.js",
+    "test:coverage": "nyc ava src/*.spec.js --tap | tap-xunit > coverage/junit.xml",
     "build": "webpack",
     "watch-build": "webpack --watch",
-    "prepublish": "./npm run test && ./npm run build"
+    "prepublish": "./npm run test && ./npm run build",
+    "pretest:coverage": "webpack --config webpack.tests.js",
+    "pretest:nocoverage": "webpack --config webpack.tests.js"
   },
   "keywords": [
     "oneweb",
@@ -23,6 +27,8 @@
     "babel-loader": "^7.0.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-preset-env": "^1.5.2",
+    "nyc": "14.1.1",
+    "tap-xunit": "2.4.1",
     "webpack": "^3.3.0",
     "webpack-node-externals": "^1.6.0"
   },
