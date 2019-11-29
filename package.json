@@ -1,6 +1,6 @@
 {
   "name": "iframe-hash-manager",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "description": "Simple module for managing the routes of multiple iframes in a pain-free way",
   "main": "dist/iframeHashManager.js",
   "repository": {
