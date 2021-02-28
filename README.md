@@ -1,9 +1,9 @@
 # iframe-hash-manager
 Tiny library to effortlessly sync a window's location hash with the hashes of multiple iframes in the site.
 
-<a target="_blank" href="https://image.ibb.co/mCjPD5/Screen_Shot_2017_05_09_at_14_16_43.png">
-  <img src="https://cdn.pbrd.co/images/9IHOGGr70.png" width="300px">
-</a>
+| :warning: Note: This project is in maintenance mode and no longer actively developed. 
+| --- |
+
 
 ## Usage
 > Note: Currently, changes in the master hash will not be reflected in the iframes.
