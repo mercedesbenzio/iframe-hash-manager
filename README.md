@@ -1,7 +1,7 @@
 # iframe-hash-manager
 Tiny library to effortlessly sync a window's location hash with the hashes of multiple iframes in the site.
 
-| :warning: Note: This project is in maintenance mode and no longer actively developed. 
+| :warning: Note: This project is in maintenance mode and no longer actively developed.
 | --- |
 
 
